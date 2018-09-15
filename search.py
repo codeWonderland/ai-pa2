@@ -86,8 +86,22 @@ def depth_first_search(problem):
     print("Start's successors:",
           problem.get_successors(problem.get_start_state()))
     """
-    # *** YOUR CODE HERE ***
-    util.raise_not_defined()
+
+    fringe = problem.get_successors(problem.get_start_state())
+    closed = []
+
+    while len(fringe):
+        node = fringe.pop()
+
+        if problem.is_goal_state(node[0]):
+            closed.append(node)
+            break
+        if node not in closed:
+            closed.append(node)
+
+            fringe = fringe + problem.get_successors(node[0])
+
+    return [node[1] for node in closed]
 
 
 def breadth_first_search(problem):
