@@ -18,7 +18,7 @@ Pieter Abbeel (pabbeel@cs.berkeley.edu).
 """
 
 import util
-
+import copy
 
 class SearchProblem:
     """This class outlines the structure of a search problem.
@@ -70,6 +70,35 @@ def tiny_maze_search(problem):
     w = Directions.WEST
     return [s, s, w, s, w, w, s, w]
 
+def graph_search(problem, fringe):
+    closed = set()
+
+    for node in problem.get_successors(problem.get_start_state()):
+        fringe.push([node]) 
+    
+    while not fringe.is_empty():
+
+        path = fringe.pop()
+        
+        node = path[-1][0]
+
+        if node not in closed:
+            closed.add(node)
+
+            if problem.is_goal_state(node):
+                break
+        
+            successors = [item for item in problem.get_successors(node) if item[0] not in closed]
+
+            for item in successors:
+                tmp_path = copy.deepcopy(path)
+                
+                tmp_path.append(item)
+
+                fringe.push(tmp_path)
+
+    return [node[1] for node in path]
+
 
 def depth_first_search(problem):
     """Run DFS on the given problem.
@@ -86,38 +115,13 @@ def depth_first_search(problem):
     print("Start's successors:",
           problem.get_successors(problem.get_start_state()))
     """
+    return graph_search(problem, util.Stack())
 
-    fringe = problem.get_successors(problem.get_start_state())
-    closed = set()
-    path = []
-
-    # a node should represent the path to itself
-    # a state should be the current position of the node
-
-    while len(fringe):
-        node = fringe.pop()
-
-        if (node, ','.join(path)) not in closed:
-            closed.add((node, ','.join(path)))
-
-            path.append(node[1])
-
-            if problem.is_goal_state(node[0]):
-                break
-        
-            successors = problem.get_successors(node[0])
-
-            if (len(successors)):
-                fringe.extend(successors)
-            else:
-                path.pop()
-
-    return path
 
 def breadth_first_search(problem):
     """Run BFS on the given problem."""
     # *** YOUR CODE HERE ***
-    util.raise_not_defined()
+    return graph_search(problem, util.Queue())
 
 
 def uniform_cost_search(problem):
