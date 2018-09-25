@@ -89,19 +89,30 @@ def depth_first_search(problem):
 
     fringe = problem.get_successors(problem.get_start_state())
     closed = set()
+    path = []
+
+    # a node should represent the path to itself
+    # a state should be the current position of the node
 
     while len(fringe):
         node = fringe.pop()
+        path.append(node[1])
+        print(path)
 
         if problem.is_goal_state(node[0]):
             break
-        if node not in closed:
-            closed.add(node)
 
-            fringe = fringe + problem.get_successors(node[0])
+        if (node, ','.join(path)) not in closed:
+            closed.add((node, ','.join(path)))
 
-    return [node[1] for node in closed]
+            successors = problem.get_successors(node[0])
 
+            if (len(successors)):
+                fringe.extend(successors)
+            else:
+                path.pop()
+
+    return path
 
 def breadth_first_search(problem):
     """Run BFS on the given problem."""
