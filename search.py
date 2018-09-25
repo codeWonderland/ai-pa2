@@ -120,14 +120,15 @@ def depth_first_search(problem):
 
 def breadth_first_search(problem):
     """Run BFS on the given problem."""
-    # *** YOUR CODE HERE ***
     return graph_search(problem, util.Queue())
 
 
 def uniform_cost_search(problem):
     """Run UCS on the given problem."""
-    # *** YOUR CODE HERE ***
-    util.raise_not_defined()
+    def calc_cost(path):
+        return problem.get_cost_of_actions([node[1] for node in path])
+    
+    return graph_search(problem, util.PriorityQueueWithFunction(calc_cost))
 
 
 def null_heuristic(state, problem=None):
