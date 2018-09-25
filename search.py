@@ -96,15 +96,15 @@ def depth_first_search(problem):
 
     while len(fringe):
         node = fringe.pop()
-        path.append(node[1])
-        print(path)
-
-        if problem.is_goal_state(node[0]):
-            break
 
         if (node, ','.join(path)) not in closed:
             closed.add((node, ','.join(path)))
 
+            path.append(node[1])
+
+            if problem.is_goal_state(node[0]):
+                break
+        
             successors = problem.get_successors(node[0])
 
             if (len(successors)):
