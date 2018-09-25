@@ -73,30 +73,47 @@ def tiny_maze_search(problem):
 def graph_search(problem, fringe):
     closed = set()
 
+    # we know that we aren't starting at the goal,
+    # so we start by putting the successors of the start state 
+    # on the fringe
     for node in problem.get_successors(problem.get_start_state()):
+        # the nodes are being placed in an array as the fringe
+        # is keeping track of the path, not just the individual nodes
+        # it just so happens that this is a path with only one step
         fringe.push([node]) 
     
     while not fringe.is_empty():
 
+        # grap the next path to explore on the fringe
         path = fringe.pop()
         
+        # the last element in the path is the newest node
+        # and we need to check it's position
         node = path[-1][0]
 
+        # should we be adding the whole path here?
         if node not in closed:
             closed.add(node)
 
             if problem.is_goal_state(node):
                 break
-        
+
+            # while we are already iterating over the new nodes
+            # we should make sure that we haven't explored any 
+            # of them already
             successors = [item for item in problem.get_successors(node) if item[0] not in closed]
 
             for item in successors:
+                # create a new path based off of what we have just explored
                 tmp_path = copy.deepcopy(path)
                 
+                # add the new node to explore to the end of said path
                 tmp_path.append(item)
 
                 fringe.push(tmp_path)
 
+    # we only need the directions we are goin
+    # so we are just returning that part of our path
     return [node[1] for node in path]
 
 
@@ -145,8 +162,11 @@ def a_star_search(problem, heuristic=null_heuristic):
 
     A* searches the node that has the lowest combined cost and heuristic first.
     """
-    # *** YOUR CODE HERE ***
-    util.raise_not_defined()
+    def calc_cost(path):
+        return problem.get_cost_of_actions([node[1] for node in path]) + \
+            heuristic(path[-1][0], problem)
+    
+    return graph_search(problem, util.PriorityQueueWithFunction(calc_cost))
 
 
 # Abbreviations
