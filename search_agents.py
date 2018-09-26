@@ -47,7 +47,7 @@ from game import Actions
 import util
 import time
 import search
-
+import copy
 
 class GoWestAgent(Agent):
     """An agent that goes West until it can't."""
@@ -247,7 +247,7 @@ class PositionSearchProblem(search.SearchProblem):
                 successors.append((next_state, action, cost))
 
         # Bookkeeping for display purposes
-        self._expanded += 1  # DO NOT CHANGE
+        self._expanded += 1  # DO NOT CHANG
         if state not in self._visited:
             self._visited[state] = True
             self._visitedlist.append(state)
@@ -331,15 +331,20 @@ class CornersProblem(search.SearchProblem):
     You must select a suitable state space and successor function!
     """
 
-    def __init__(self, starting_game_state):
+    def __init__(self, starting_game_state, cost_fn=lambda x: 1):
         """Store the walls, pacman's starting position and corners."""
         self.walls = starting_game_state.get_walls()
         self.starting_position = starting_game_state.get_pacman_position()
+
         top, right = self.walls.height - 2, self.walls.width - 2
         self.corners = ((1, 1), (1, top), (right, 1), (right, top))
+
+        self.cost_fn = cost_fn
+        
         for corner in self.corners:
             if not starting_game_state.has_food(*corner):
                 print('Warning: no food in corner ' + str(corner))
+        
         self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
 
         # Please add any code here which you would like to use
@@ -354,16 +359,16 @@ class CornersProblem(search.SearchProblem):
         Important:
             start state is in your state space, not the full Pacman state space
         """
-        # *** YOUR CODE HERE ***
-        util.raise_not_defined()
+        return (self.starting_position, self.corners)
+
 
     def is_goal_state(self, state):
         """Return True if and only if the state is a valid goal state.
 
         Overrides search.SearchProblem.is_goal_state
         """
-        # *** YOUR CODE HERE ***
-        util.raise_not_defined()
+        # Check if corners array is empty
+        return not state[1]
 
     def get_successors(self, state):
         """Return successor states, the actions they require, and a cost of 1.
@@ -378,6 +383,9 @@ class CornersProblem(search.SearchProblem):
             cost of expanding to that successor
         """
         successors = []
+        x, y = copy.deepcopy(state[0])
+        corners = copy.deepcopy(state[1])
+
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST,
                        Directions.WEST]:
             # Add a successor state to the successor list if the action is
@@ -389,13 +397,30 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hits_wall = self.walls[nextx][nexty]
 
-            # *** YOUR CODE HERE ***
-            # Note pass does nothing. It is only needed as a placeholder for
-            # an empty code block.  You should remove it once you have written
-            # actual code
-            pass
+            dx, dy =  Actions.direction_to_vector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+
+            # ignore options that run you into a wall
+            if not self.walls[nextx][nexty]:\
+
+               next_state = (nextx, nexty)
+               cost = self.cost_fn(next_state) 
+            
+               # check to see if this action leads to an unexplored corner
+               if next_state in corners:
+
+                   tmp_corners = copy.deepcopy(corners)
+
+                   corners = list(corners)
+                   corners.remove(next_state)
+                   corners = tuple(corners)
+
+                   successors.append(((next_state, tmp_corners), action, cost))
+               else:
+                   successors.append(((next_state, corners), action, cost))
 
         self._expanded += 1  # DO NOT CHANGE
+
         return successors
 
     def get_cost_of_actions(self, actions):
@@ -435,8 +460,24 @@ def corners_heuristic(state, problem):
     #   problem.corners  -- these are the corner coordinates
     #   problem.walls  -- these are the walls of the maze, as a Grid (game.py)
 
-    # *** YOUR CODE HERE ***
-    return 0  # Default to trivial solution
+    heuristic = 0
+    pos = copy.deepcopy(state[0])
+    corners = copy.deepcopy(state[1])
+
+    while corners:
+
+        distances = []
+
+        for corner in corners:
+            distances.append(util.manhattan_distance(pos, corner))
+
+        next = (min(distances), distances.index(min(distances)))
+
+        heuristic = heuristic + next[0]
+        pos = corners[next[1]]
+        corners.remove(next[1])
+
+    return heuristic  # Default to trivial solution
 
 
 class AStarCornersAgent(SearchAgent):
