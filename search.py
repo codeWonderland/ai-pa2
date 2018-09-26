@@ -92,6 +92,8 @@ def graph_search(problem, fringe):
     """Return a sequence of moves to solve a maze."""
     closed = set()
 
+    closed.add(problem.get_start_state())
+
     # we know that we aren't starting at the goal,
     # so we start by putting the successors of the start state
     # on the fringe
