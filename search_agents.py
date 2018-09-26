@@ -653,10 +653,13 @@ class ClosestDotSearchAgent(SearchAgent):
         # start_position = game_state.get_pacman_position()
         # food = game_state.get_food()
         # walls = game_state.get_walls()
-        # problem = AnyFoodSearchProblem(game_state)
 
-        # *** YOUR CODE HERE ***
-        return search.bfs(AnyFoodSearchProblem(game_state))
+        # we have a lot to mess around with here
+        # but i don't think we need anything other than this
+        problem = AnyFoodSearchProblem(game_state)
+
+        # we want closest dot, so we use bfs
+        return search.bfs(problem)
 
 
 class AnyFoodSearchProblem(PositionSearchProblem):
@@ -697,6 +700,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         """
         x, y = state
 
+        # determine if food is state given
         return self.food[x][y]
 
 
