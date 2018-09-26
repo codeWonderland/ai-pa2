@@ -457,7 +457,7 @@ def corners_heuristic(state, problem):
 
     heuristic = 0
     pos = copy.deepcopy(state[0])
-    corners = copy.deepcopy(state[1])
+    corners = list(copy.deepcopy(state[1]))
 
     while corners:
 
@@ -467,13 +467,19 @@ def corners_heuristic(state, problem):
         for corner in corners:
             distances.append(util.manhattan_distance(pos, corner))
 
-        next = (min(distances), distances.index(min(distances)))
+        # determine the shortest route
+        min_dist = min(distances)
 
-        heuristic = heuristic + next[0]
-        pos = corners[next[1]]
-        corners.remove(next[1])
+        # add up the total cost
+        heuristic = heuristic + min_dist
 
-    return heuristic  # Default to trivial solution
+        # establish where we are starting from next
+        pos = corners[distances.index(min_dist)]
+
+        # we've gotten this piece of food now, so we remove it
+        corners.remove(pos)
+
+    return heuristic
 
 
 class AStarCornersAgent(SearchAgent):
