@@ -1,4 +1,5 @@
-"""
+"""Search algorithms.
+
 Author: Alice Easter && Sam LoPiccolo
 Class: CSI-480-01
 Assignment: PA 2 -- Search
@@ -34,6 +35,7 @@ Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
 import util
 import copy
+
 
 class SearchProblem:
     """This class outlines the structure of a search problem.
@@ -87,22 +89,23 @@ def tiny_maze_search(problem):
 
 
 def graph_search(problem, fringe):
+    """Return a sequence of moves to solve a maze."""
     closed = set()
 
     # we know that we aren't starting at the goal,
-    # so we start by putting the successors of the start state 
+    # so we start by putting the successors of the start state
     # on the fringe
     for state in problem.get_successors(problem.get_start_state()):
         # the nodes are being placed in an array as the fringe
         # is keeping track of the path, not just the individual nodes
         # it just so happens that this is a path with only one step
-        fringe.push([state]) 
-    
+        fringe.push([state])
+
     while not fringe.is_empty():
 
         # grap the next path to explore on the fringe
         path = fringe.pop()
-        
+
         # the last element in the path is the newest node
         # and we need to check it's state
         state = path[-1][0]
@@ -115,14 +118,15 @@ def graph_search(problem, fringe):
                 break
 
             # while we are already iterating over the new nodes
-            # we should make sure that we haven't explored any 
+            # we should make sure that we haven't explored any
             # of them already
-            successors = [node for node in problem.get_successors(state) if node[0] not in closed]
+            successors = [node for node in problem.get_successors(state)
+                          if node[0] not in closed]
 
             for node in successors:
                 # create a new path based off of what we have just explored
                 tmp_path = copy.deepcopy(path)
-                
+
                 # add the new node to explore to the end of said path
                 tmp_path.append(node)
 
@@ -160,7 +164,7 @@ def uniform_cost_search(problem):
     """Run UCS on the given problem."""
     def calc_cost(path):
         return problem.get_cost_of_actions([node[1] for node in path])
-    
+
     return graph_search(problem, util.PriorityQueueWithFunction(calc_cost))
 
 
@@ -181,7 +185,7 @@ def a_star_search(problem, heuristic=null_heuristic):
     def calc_cost(path):
         return problem.get_cost_of_actions([node[1] for node in path]) + \
             heuristic(path[-1][0], problem)
-    
+
     return graph_search(problem, util.PriorityQueueWithFunction(calc_cost))
 
 
