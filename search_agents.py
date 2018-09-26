@@ -1,4 +1,5 @@
-"""
+"""Search Agent.
+
 Author: Alice Easter && Sam LoPiccolo
 Class: CSI-480-01
 Assignment: PA 2 -- Search
@@ -397,12 +398,15 @@ class CornersProblem(search.SearchProblem):
                 if next_state in corners:
                     tmp_corners = copy.deepcopy(corners)
 
-                    # cast to list to remove the corner we visit with next state
+                    # cast to list to remove the corner
+                    # we visit with next state
                     tmp_corners = list(tmp_corners)
                     tmp_corners.remove(next_state)
                     tmp_corners = tuple(tmp_corners)
 
-                    successors.append(((next_state, tmp_corners), action, cost))
+                    successors.append(
+                        ((next_state, tmp_corners), action, cost)
+                    )
                 else:
                     successors.append(((next_state, corners), action, cost))
 
@@ -454,7 +458,7 @@ def corners_heuristic(state, problem):
     while corners:
 
         # get distance to each corner
-        distances = [util.manhattan_distance(pos, corner) for corner in corners]
+        distances = [util.manhattan_distance(pos, cur) for cur in corners]
 
         # determine the shortest route
         min_dist = min(distances)
@@ -605,7 +609,10 @@ class ClosestDotSearchAgent(SearchAgent):
 
     def __init__(self, fn='depth_first_search', prob='PositionSearchProblem',
                  heuristic='null_heuristic'):
-        super().__init__(fn='depth_first_search', prob='PositionSearchProblem', heuristic='null_heuristic')
+        """Create agent."""
+        super().__init__(fn='depth_first_search',
+                         prob='PositionSearchProblem',
+                         heuristic='null_heuristic')
         self.actions = []
 
     def register_initial_state(self, state):

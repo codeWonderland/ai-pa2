@@ -286,6 +286,7 @@
       <change beforePath="$PROJECT_DIR$/../pa1 - python practice/basics.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pa1 - python practice/basics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pa1 - python practice/shop.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pa1 - python practice/shop.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../pa1 - python practice/shop_smart.py" beforeDir="false" afterPath="$PROJECT_DIR$/../pa1 - python practice/shop_smart.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/search_agents.py" beforeDir="false" afterPath="$PROJECT_DIR$/search_agents.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -318,12 +319,12 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="895" />
+          <entry key="py" value="1113" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="895" />
+          <entry key="Python" value="1113" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.vcs.git.usages" />
@@ -335,8 +336,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/search.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="72" selection-start-line="72" selection-end-line="72" />
+            <state>
+              <caret column="3" selection-start-column="3" selection-end-column="3" />
             </state>
           </provider>
         </entry>
@@ -354,8 +355,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/search_agents.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="310">
-              <caret line="481" column="20" lean-forward="true" selection-start-line="457" selection-start-column="4" selection-end-line="481" selection-end-column="20" />
+            <state relative-caret-position="300">
+              <caret line="611" column="24" selection-start-line="611" selection-start-column="24" selection-end-line="611" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -384,7 +385,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="140" />
     <option name="y" value="47" />
     <option name="width" value="1400" />
@@ -443,7 +444,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="140" y="47" width="1400" height="983" extended-state="1" />
+    <frame x="140" y="47" width="1400" height="983" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.26292467" />
@@ -476,13 +477,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/search.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="72" selection-start-line="72" selection-end-line="72" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SECOND">
@@ -494,10 +488,17 @@
     <entry file="file://$PROJECT_DIR$/game.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/search.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="3" selection-start-column="3" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/search_agents.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="481" column="20" lean-forward="true" selection-start-line="457" selection-start-column="4" selection-end-line="481" selection-end-column="20" />
+        <state relative-caret-position="300">
+          <caret line="611" column="24" selection-start-line="611" selection-start-column="24" selection-end-line="611" selection-end-column="24" />
         </state>
       </provider>
     </entry>
