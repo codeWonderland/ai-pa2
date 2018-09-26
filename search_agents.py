@@ -49,6 +49,7 @@ import time
 import search
 import copy
 
+
 class GoWestAgent(Agent):
     """An agent that goes West until it can't."""
 
@@ -286,10 +287,10 @@ class StayEastSearchAgent(SearchAgent):
     def __init__(self):
         """Create StayEastSearchAgent."""
         self.search_function = search.uniform_cost_search
-        cost_fn = lambda pos: .5 ** pos[0] # noqa
+        cost_fn = lambda pos: .5 ** pos[0]  # noqa
         self.search_type = lambda state: PositionSearchProblem(state, cost_fn,
                                                                (1, 1), None,
-                                                               False) # noqa
+                                                               False)  # noqa
 
 
 class StayWestSearchAgent(SearchAgent):
@@ -303,8 +304,8 @@ class StayWestSearchAgent(SearchAgent):
     def __init__(self):
         """Create StayWestSearchAgent."""
         self.search_function = search.uniform_cost_search
-        cost_fn = lambda pos: 2 ** pos[0] # noqa
-        self.search_type = lambda state: PositionSearchProblem(state, cost_fn) # noqa
+        cost_fn = lambda pos: 2 ** pos[0]  # noqa
+        self.search_type = lambda state: PositionSearchProblem(state, cost_fn)  # noqa
 
 
 def manhattan_heuristic(position, problem, info={}):
@@ -340,16 +341,12 @@ class CornersProblem(search.SearchProblem):
         self.corners = ((1, 1), (1, top), (right, 1), (right, top))
 
         self.cost_fn = cost_fn
-        
+
         for corner in self.corners:
             if not starting_game_state.has_food(*corner):
                 print('Warning: no food in corner ' + str(corner))
-        
-        self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
 
-        # Please add any code here which you would like to use
-        # in initializing the problem
-        # *** YOUR CODE HERE ***
+        self._expanded = 0  # DO NOT CHANGE; Number of search nodes expanded
 
     def get_start_state(self):
         """Return the start state for the search problem.
@@ -360,7 +357,6 @@ class CornersProblem(search.SearchProblem):
             start state is in your state space, not the full Pacman state space
         """
         return (self.starting_position, self.corners)
-
 
     def is_goal_state(self, state):
         """Return True if and only if the state is a valid goal state.
@@ -397,26 +393,26 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hits_wall = self.walls[nextx][nexty]
 
-            dx, dy =  Actions.direction_to_vector(action)
+            dx, dy = Actions.direction_to_vector(action)
             nextx, nexty = int(x + dx), int(y + dy)
 
             # ignore options that run you into a wall
             if not self.walls[nextx][nexty]:
 
-               next_state = (nextx, nexty)
-               cost = self.cost_fn(next_state) 
-            
-               # check to see if this action leads to an unexplored corner
-               if next_state in corners:
-                   tmp_corners = copy.deepcopy(corners)
+                next_state = (nextx, nexty)
+                cost = self.cost_fn(next_state)
 
-                   tmp_corners = list(corners)
-                   tmp_corners.remove(next_state)
-                   tmp_corners = tuple(corners)
+                # check to see if this action leads to an unexplored corner
+                if next_state in corners:
+                    tmp_corners = copy.deepcopy(corners)
 
-                   successors.append(((next_state, tmp_corners), action, cost))
-               else:
-                   successors.append(((next_state, corners), action, cost))
+                    tmp_corners = list(tmp_corners)
+                    tmp_corners.remove(next_state)
+                    tmp_corners = tuple(tmp_corners)
+
+                    successors.append(((next_state, tmp_corners), action, cost))
+                else:
+                    successors.append(((next_state, corners), action, cost))
 
         self._expanded += 1  # DO NOT CHANGE
 
@@ -573,7 +569,7 @@ class AStarFoodSearchAgent(SearchAgent):
     def __init__(self):
         """Create agent."""
         self.search_function = lambda prob: (
-                                    search.a_star_search(prob, food_heuristic))
+            search.a_star_search(prob, food_heuristic))
         self.search_type = FoodSearchProblem
 
 
@@ -628,7 +624,7 @@ class ClosestDotSearchAgent(SearchAgent):
         """
         self.actions = []
         current_state = state
-        while(current_state.get_food().count() > 0):
+        while (current_state.get_food().count() > 0):
             next_path_segment = self.find_path_to_closest_dot(current_state)
             self.actions += next_path_segment
             for action in next_path_segment:

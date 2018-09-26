@@ -70,6 +70,7 @@ def tiny_maze_search(problem):
     w = Directions.WEST
     return [s, s, w, s, w, w, s, w]
 
+
 def graph_search(problem, fringe):
     closed = set()
 
@@ -94,7 +95,6 @@ def graph_search(problem, fringe):
         # should we be adding the whole path here?
         if state not in closed:
             closed.add(state)
-            print(state)
 
             if problem.is_goal_state(state):
                 break
