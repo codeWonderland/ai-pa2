@@ -1,27 +1,18 @@
-"""This file contains all of the agents that can be selected to control Pacman.
+"""
+Author: Alice Easter && Sam LoPiccolo
+Class: CSI-480-01
+Assignment: PA 2 -- Search
+Due Date: September 26, 2018 11:59 PM
 
-To select an agent, use the '-p' option when running pacman.py.
-
-Arguments can be passed to your agent using '-a'.
-
-Example:
-    to load a SearchAgent that uses depth first search (dfs),
-    run the following command:
-
-    > python pacman.py -p SearchAgent -a fn=depth_first_search
-
-Commands to invoke other search strategies can be found in the project
-description.
-
-Please only change the parts of the file you are asked to.  Look for the lines
-that say
-
-# *** YOUR CODE HERE ***
-
-The parts you fill in start about 3/4 of the way down.  Follow the assignment
-description for details.
-
-Good luck and happy searching!
+Certification of Authenticity:
+I certify that this is entirely my own work, except where I have given
+fully-documented references to the work of others. I understand the definition
+and consequences of plagiarism and acknowledge that the assessor of this
+assignment may, for the purpose of assessing this assignment:
+- Reproduce this assignment and provide a copy to another member of academic
+- staff; and/or Communicate a copy of this assignment to a plagiarism checking
+- service (which may then retain a copy of this assignment on its database for
+- the purpose of future plagiarism checking)
 
 ----------------------
 Champlain College CSI-480, Fall 2018
@@ -406,6 +397,7 @@ class CornersProblem(search.SearchProblem):
                 if next_state in corners:
                     tmp_corners = copy.deepcopy(corners)
 
+                    # cast to list to remove the corner we visit with next state
                     tmp_corners = list(tmp_corners)
                     tmp_corners.remove(next_state)
                     tmp_corners = tuple(tmp_corners)
@@ -461,11 +453,8 @@ def corners_heuristic(state, problem):
 
     while corners:
 
-        distances = []
-
         # get distance to each corner
-        for corner in corners:
-            distances.append(util.manhattan_distance(pos, corner))
+        distances = [util.manhattan_distance(pos, corner) for corner in corners]
 
         # determine the shortest route
         min_dist = min(distances)
@@ -614,6 +603,11 @@ def food_heuristic(state, problem):
 class ClosestDotSearchAgent(SearchAgent):
     """Search for all food using a sequence of searches."""
 
+    def __init__(self, fn='depth_first_search', prob='PositionSearchProblem',
+                 heuristic='null_heuristic'):
+        super().__init__(fn='depth_first_search', prob='PositionSearchProblem', heuristic='null_heuristic')
+        self.actions = []
+
     def register_initial_state(self, state):
         """Register initial state of search problem.
 
@@ -628,9 +622,8 @@ class ClosestDotSearchAgent(SearchAgent):
         Args:
             state: start state
         """
-        self.actions = []
         current_state = state
-        while (current_state.get_food().count() > 0):
+        while current_state.get_food().count() > 0:
             next_path_segment = self.find_path_to_closest_dot(current_state)
             self.actions += next_path_segment
             for action in next_path_segment:
