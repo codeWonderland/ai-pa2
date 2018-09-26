@@ -76,11 +76,11 @@ def graph_search(problem, fringe):
     # we know that we aren't starting at the goal,
     # so we start by putting the successors of the start state 
     # on the fringe
-    for node in problem.get_successors(problem.get_start_state()):
+    for state in problem.get_successors(problem.get_start_state()):
         # the nodes are being placed in an array as the fringe
         # is keeping track of the path, not just the individual nodes
         # it just so happens that this is a path with only one step
-        fringe.push([node]) 
+        fringe.push([state]) 
     
     while not fringe.is_empty():
 
@@ -88,33 +88,34 @@ def graph_search(problem, fringe):
         path = fringe.pop()
         
         # the last element in the path is the newest node
-        # and we need to check it's position
-        node = path[-1][0]
+        # and we need to check it's state
+        state = path[-1][0]
 
         # should we be adding the whole path here?
-        if node not in closed:
-            closed.add(node)
+        if state not in closed:
+            closed.add(state)
+            print(state)
 
-            if problem.is_goal_state(node):
+            if problem.is_goal_state(state):
                 break
 
             # while we are already iterating over the new nodes
             # we should make sure that we haven't explored any 
             # of them already
-            successors = [item for item in problem.get_successors(node) if item[0] not in closed]
+            successors = [node for node in problem.get_successors(state) if node[0] not in closed]
 
-            for item in successors:
+            for node in successors:
                 # create a new path based off of what we have just explored
                 tmp_path = copy.deepcopy(path)
                 
                 # add the new node to explore to the end of said path
-                tmp_path.append(item)
+                tmp_path.append(node)
 
                 fringe.push(tmp_path)
 
-    # we only need the directions we are goin
+    # we only need the directions we are going
     # so we are just returning that part of our path
-    return [node[1] for node in path]
+    return [state[1] for state in path]
 
 
 def depth_first_search(problem):

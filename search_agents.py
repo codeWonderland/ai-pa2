@@ -383,8 +383,8 @@ class CornersProblem(search.SearchProblem):
             cost of expanding to that successor
         """
         successors = []
-        x, y = copy.deepcopy(state[0])
-        corners = copy.deepcopy(state[1])
+        x, y = state[0]
+        corners = state[1]
 
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST,
                        Directions.WEST]:
@@ -401,19 +401,18 @@ class CornersProblem(search.SearchProblem):
             nextx, nexty = int(x + dx), int(y + dy)
 
             # ignore options that run you into a wall
-            if not self.walls[nextx][nexty]:\
+            if not self.walls[nextx][nexty]:
 
                next_state = (nextx, nexty)
                cost = self.cost_fn(next_state) 
             
                # check to see if this action leads to an unexplored corner
                if next_state in corners:
-
                    tmp_corners = copy.deepcopy(corners)
 
-                   corners = list(corners)
-                   corners.remove(next_state)
-                   corners = tuple(corners)
+                   tmp_corners = list(corners)
+                   tmp_corners.remove(next_state)
+                   tmp_corners = tuple(corners)
 
                    successors.append(((next_state, tmp_corners), action, cost))
                else:
@@ -468,6 +467,7 @@ def corners_heuristic(state, problem):
 
         distances = []
 
+        # get distance to each corner
         for corner in corners:
             distances.append(util.manhattan_distance(pos, corner))
 
