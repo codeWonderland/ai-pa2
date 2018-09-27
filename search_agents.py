@@ -435,7 +435,7 @@ class CornersProblem(search.SearchProblem):
 
 
 def corners_heuristic(state, problem):
-    """Compute heuristic for the CornersProblem that you defined.
+    """Manhattan distance from each piece of the food to each other.
 
     Args:
         state: The current search state
@@ -505,6 +505,7 @@ class FoodSearchProblem(search.SearchProblem):
 
         # A dictionary for the heuristic to store information
         self.heuristic_info = {}
+        self.heuristic_info['distances'] = {}
 
     def get_start_state(self):
         """Return the start state for the search problem.
@@ -573,7 +574,7 @@ class AStarFoodSearchAgent(SearchAgent):
 
 
 def food_heuristic(state, problem):
-    """Your heuristic for the FoodSearchProblem goes here.
+    """Take the distance from pacman to the furthest piece of food.
 
     This heuristic must be consistent to ensure correctness.  First, try to
     come up with an admissible heuristic; almost all admissible heuristics will
@@ -599,9 +600,31 @@ def food_heuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristic_info['wall_count']
     """
-    position, food_grid = state
-    # *** YOUR CODE HERE ***"
-    return 0
+    pac_pos, food_grid = state
+
+    # make food into something we can iterate over
+    food_array = food_grid.as_list()
+    heuristic = 0
+
+    for bite_pos in food_array:
+
+        # if we already have an entry for this combo, we use it
+        if (pac_pos, bite_pos) in problem.heuristic_info['distances']:
+            tmp_distance = \
+                problem.heuristic_info['distances'][(pac_pos, bite_pos)]
+
+        # otherwise we calculate the dist and add it to our dict
+        else:
+            tmp_distance = \
+                maze_distance(pac_pos, bite_pos, problem.starting_game_state)
+
+            problem.heuristic_info['distances'][(pac_pos, bite_pos)] = \
+                tmp_distance
+
+        # we want the furthest distance from pacman
+        heuristic = max(heuristic, tmp_distance)
+
+    return heuristic
 
 
 class ClosestDotSearchAgent(SearchAgent):
