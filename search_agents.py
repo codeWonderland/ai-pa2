@@ -1,6 +1,6 @@
 """Search Agent.
 
-Author: Alice Easter && Sam LoPiccolo
+Author: Alice Easter
 Class: CSI-480-01
 Assignment: PA 2 -- Search
 Due Date: September 26, 2018 11:59 PM
@@ -233,9 +233,9 @@ class PositionSearchProblem(search.SearchProblem):
                        Directions.WEST]:
             x, y = state
             dx, dy = Actions.direction_to_vector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
-                next_state = (nextx, nexty)
+            next_x, next_y = int(x + dx), int(y + dy)
+            if not self.walls[next_x][next_y]:
+                next_state = (next_x, next_y)
                 cost = self.cost_fn(next_state)
                 successors.append((next_state, action, cost))
 
@@ -278,9 +278,10 @@ class StayEastSearchAgent(SearchAgent):
 
     def __init__(self):
         """Create StayEastSearchAgent."""
+        super().__init__()
         self.search_function = search.uniform_cost_search
-        cost_fn = lambda pos: .5 ** pos[0]  # noqa
-        self.search_type = lambda state: PositionSearchProblem(state, cost_fn,
+        self.cost_fn = lambda pos: .5 ** pos[0]  # noqa
+        self.search_type = lambda state: PositionSearchProblem(state, self.cost_fn,
                                                                (1, 1), None,
                                                                False)  # noqa
 
@@ -295,9 +296,10 @@ class StayWestSearchAgent(SearchAgent):
 
     def __init__(self):
         """Create StayWestSearchAgent."""
+        super().__init__()
         self.search_function = search.uniform_cost_search
-        cost_fn = lambda pos: 2 ** pos[0]  # noqa
-        self.search_type = lambda state: PositionSearchProblem(state, cost_fn)  # noqa
+        self.cost_fn = lambda pos: 2 ** pos[0]  # noqa
+        self.search_type = lambda state: PositionSearchProblem(state, self.cost_fn)  # noqa
 
 
 def manhattan_heuristic(position, problem, info={}):
@@ -348,7 +350,7 @@ class CornersProblem(search.SearchProblem):
         Important:
             start state is in your state space, not the full Pacman state space
         """
-        return (self.starting_position, self.corners)
+        return self.starting_position, self.corners
 
     def is_goal_state(self, state):
         """Return True if and only if the state is a valid goal state.
@@ -382,16 +384,16 @@ class CornersProblem(search.SearchProblem):
             # hits a wall:
             #   x,y = current_position
             #   dx, dy = Actions.direction_to_vector(action)
-            #   nextx, nexty = int(x + dx), int(y + dy)
-            #   hits_wall = self.walls[nextx][nexty]
+            #   next_x, next_y = int(x + dx), int(y + dy)
+            #   hits_wall = self.walls[next_x][next_y]
 
             dx, dy = Actions.direction_to_vector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
+            next_x, next_y = int(x + dx), int(y + dy)
 
             # ignore options that run you into a wall
-            if not self.walls[nextx][nexty]:
+            if not self.walls[next_x][next_y]:
 
-                next_state = (nextx, nexty)
+                next_state = (next_x, next_y)
                 cost = self.cost_fn(next_state)
 
                 # check to see if this action leads to an unexplored corner
@@ -504,8 +506,7 @@ class FoodSearchProblem(search.SearchProblem):
         self._expanded = 0  # DO NOT CHANGE
 
         # A dictionary for the heuristic to store information
-        self.heuristic_info = {}
-        self.heuristic_info['distances'] = {}
+        self.heuristic_info = {'distances': {}}
 
     def get_start_state(self):
         """Return the start state for the search problem.
@@ -537,11 +538,11 @@ class FoodSearchProblem(search.SearchProblem):
                           Directions.WEST]:
             x, y = state[0]
             dx, dy = Actions.direction_to_vector(direction)
-            nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
+            next_x, next_y = int(x + dx), int(y + dy)
+            if not self.walls[next_x][next_y]:
                 next_food = state[1].copy()
-                next_food[nextx][nexty] = False
-                successors.append((((nextx, nexty), next_food), direction, 1))
+                next_food[next_x][next_y] = False
+                successors.append((((next_x, next_y), next_food), direction, 1))
         return successors
 
     def get_cost_of_actions(self, actions):
@@ -568,6 +569,7 @@ class AStarFoodSearchAgent(SearchAgent):
 
     def __init__(self):
         """Create agent."""
+        super().__init__()
         self.search_function = lambda prob: (
             search.a_star_search(prob, food_heuristic))
         self.search_type = FoodSearchProblem
@@ -627,6 +629,25 @@ def food_heuristic(state, problem):
     return heuristic
 
 
+def find_path_to_closest_dot(game_state):
+    """Return a path (a list of actions) to the closest dot.
+
+    Args:
+        game_state: where search starts from
+    """
+    # Here are some useful elements of the start_state
+    # start_position = game_state.get_pacman_position()
+    # food = game_state.get_food()
+    # walls = game_state.get_walls()
+
+    # we have a lot to mess around with here
+    # but i don't think we need anything other than this
+    problem = AnyFoodSearchProblem(game_state)
+
+    # we want closest dot, so we use bfs
+    return search.bfs(problem)
+
+
 class ClosestDotSearchAgent(SearchAgent):
     """Search for all food using a sequence of searches."""
 
@@ -636,6 +657,7 @@ class ClosestDotSearchAgent(SearchAgent):
         super().__init__(fn='depth_first_search',
                          prob='PositionSearchProblem',
                          heuristic='null_heuristic')
+        self.action_index = 0
         self.actions = []
 
     def register_initial_state(self, state):
@@ -654,7 +676,7 @@ class ClosestDotSearchAgent(SearchAgent):
         """
         current_state = state
         while current_state.get_food().count() > 0:
-            next_path_segment = self.find_path_to_closest_dot(current_state)
+            next_path_segment = find_path_to_closest_dot(current_state)
             self.actions += next_path_segment
             for action in next_path_segment:
                 legal = current_state.get_legal_actions()
@@ -663,26 +685,7 @@ class ClosestDotSearchAgent(SearchAgent):
                                     + 'illegal move: %s!\n%s' %
                                     (str(action), str(current_state)))
                 current_state = current_state.generate_successor(0, action)
-        self.action_index = 0
         print('Path found with cost %d.' % len(self.actions))
-
-    def find_path_to_closest_dot(self, game_state):
-        """Return a path (a list of actions) to the closest dot.
-
-        Args:
-            game_state: where search starts from
-        """
-        # Here are some useful elements of the start_state
-        # start_position = game_state.get_pacman_position()
-        # food = game_state.get_food()
-        # walls = game_state.get_walls()
-
-        # we have a lot to mess around with here
-        # but i don't think we need anything other than this
-        problem = AnyFoodSearchProblem(game_state)
-
-        # we want closest dot, so we use bfs
-        return search.bfs(problem)
 
 
 class AnyFoodSearchProblem(PositionSearchProblem):

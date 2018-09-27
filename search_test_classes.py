@@ -757,7 +757,7 @@ class ClosestDotTest(test_classes.TestCase):
         lay = layout.Layout([l.strip() for l in self.layout_text.split('\n')])
         game_state = pacman.GameState()
         game_state.initialize(lay, 0)
-        path = search_agents.ClosestDotSearchAgent().find_path_to_closest_dot(
+        path = search_agents.find_path_to_closest_dot(
             game_state)
         return path
 

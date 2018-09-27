@@ -1,6 +1,6 @@
 """Search algorithms.
 
-Author: Alice Easter && Sam LoPiccolo
+Author: Alice Easter
 Class: CSI-480-01
 Assignment: PA 2 -- Search
 Due Date: September 26, 2018 11:59 PM
@@ -105,7 +105,7 @@ def graph_search(problem, fringe):
 
     while not fringe.is_empty():
 
-        # grap the next path to explore on the fringe
+        # grab the next path to explore on the fringe
         path = fringe.pop()
 
         # the last element in the path is the newest node
@@ -117,7 +117,9 @@ def graph_search(problem, fringe):
             closed.add(state)
 
             if problem.is_goal_state(state):
-                break
+                # we only need the directions we are going
+                # so we are just returning that part of our path
+                return [state[1] for state in path]
 
             # while we are already iterating over the new nodes
             # we should make sure that we haven't explored any
@@ -134,9 +136,7 @@ def graph_search(problem, fringe):
 
                 fringe.push(tmp_path)
 
-    # we only need the directions we are going
-    # so we are just returning that part of our path
-    return [state[1] for state in path]
+    return None
 
 
 def depth_first_search(problem):
